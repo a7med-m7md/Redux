@@ -1,5 +1,8 @@
 <html>
-    <head></head>
+    <head>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
+    </head>
     <body>
         <div>
             <h1>Todo List</h1>
@@ -107,37 +110,11 @@
                 }
             }
 
-            function createStore(reducer){
-                let state
-
-                const listeners = []
-
-                const dispatch = (action)=>{
-                    state = reducer(state, action)
-                    return listeners.forEach(listener=> listener())
-                }
-
-                const subscribe = (listener)=>{
-                    listeners.push(listener)
-                    return listeners.filter(l=> l != listener)
-                }
-                const getState = ()=> state
-
-                return{
-                    getState,
-                    subscribe,
-                    dispatch
-                }
-
-            }
-            function app(state={}, action){
-                return {
-                    todo: todo(state.todo, action),
-                    goal: goal(state.goal, action)
-                }
-            }
-
-            const store = createStore(app)
+            
+            const store = Redux.createStore(Redux.combineReducers({
+                todo,
+                goal
+            }))
             const unsubscribe = store.subscribe(()=> {
                 const {todo, goal} = store.getState()
                 document.getElementById('todos').innerHTML = ''
